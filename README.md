@@ -1,9 +1,9 @@
 # PCA-EXP-4-MATRIX-ADDITION-WITH-UNIFIED-MEMORY AY 23-24
 <h3>AIM:</h3>
-<h3>ENTER YOUR NAME</h3>
-<h3>ENTER YOUR REGISTER NO</h3>
-<h3>EX. NO</h3>
-<h3>DATE</h3>
+<h3>Priya Dharshni S L</h3>
+<h3>212224100045</h3>
+<h3>EX. NO 4</h3>
+<h3>30/05/2026</h3>
 <h1> <align=center> MATRIX ADDITION WITH UNIFIED MEMORY </h3>
   Refer to the program sumMatrixGPUManaged.cu. Would removing the memsets below affect performance? If you can, check performance with nvprof or nvvp.</h3>
 
@@ -39,12 +39,9 @@ Allocate Host Memory
 22.	Reset the device using cudaDeviceReset and return from the main function.
 
 ## PROGRAM:
-```C
-!pip install git+https://github.com/andreinechaev/nvcc4jupyter.git
-%load_ext nvcc4jupyter
+
 ```
-```C
-%%writefile matrix_add1.cu
+%%writefile unifmem1.cu
 #include <stdio.h>
 #include <cuda_runtime.h>
 #include <cuda.h>
@@ -185,19 +182,14 @@ void checkResult(float *hostRef, float *gpuRef, const int N)
 __global__ void sumMatrixGPU(float *MatA, float *MatB, float *MatC, int nx,
                              int ny)
 {
-
   unsigned int ix = threadIdx.x + blockIdx.x * blockDim.x;
   unsigned int iy = threadIdx.y + blockIdx.y * blockDim.y;
   unsigned int idx = iy * nx + ix;
 
-  if (ix < nx && iy < ny)
+  if (idx < nx && iy < ny)
   {
     MatC[idx] = MatA[idx] + MatB[idx];
   }
-    
-
-// Write Your Matrix Addition Code here
-
 
 }
 
@@ -261,8 +253,9 @@ int main(int argc, char **argv)
     // after warm-up, time with unified memory
     iStart = seconds();
 
-    sumMatrixGPU<<<grid, block>>>(A, B, gpuRef, nx, ny);
-    //we have to do
+
+
+   sumMatrixGPU<<<grid, block>>>(A, B, gpuRef, nx, ny);
 
 
 
@@ -289,9 +282,12 @@ int main(int argc, char **argv)
 
     return (0);
 }
+
 ```
-```C
-%%writefile matrix_add2.cu
+
+```
+
+%%writefile unifmem2.cu
 #include <stdio.h>
 #include <cuda_runtime.h>
 #include <cuda.h>
@@ -432,19 +428,14 @@ void checkResult(float *hostRef, float *gpuRef, const int N)
 __global__ void sumMatrixGPU(float *MatA, float *MatB, float *MatC, int nx,
                              int ny)
 {
-
   unsigned int ix = threadIdx.x + blockIdx.x * blockDim.x;
   unsigned int iy = threadIdx.y + blockIdx.y * blockDim.y;
   unsigned int idx = iy * nx + ix;
 
-  if (ix < nx && iy < ny)
+  if (idx < nx && iy < ny)
   {
     MatC[idx] = MatA[idx] + MatB[idx];
   }
-    
-
-// Write Your Matrix Addition Code here
-
 
 }
 
@@ -507,13 +498,9 @@ int main(int argc, char **argv)
     // after warm-up, time with unified memory
     iStart = seconds();
 
-    sumMatrixGPU<<<grid, block>>>(A, B, gpuRef, nx, ny);
-    //we have to do
 
 
-
-
-//   Type your code here to launch your kernel
+   sumMatrixGPU<<<grid, block>>>(A, B, gpuRef, nx, ny);
 
 
 
@@ -540,9 +527,15 @@ int main(int argc, char **argv)
 
     return (0);
 }
+
 ```
+
 ## OUTPUT:
-SHOW YOUR OUTPUT HERE
+<img width="1809" height="860" alt="image" src="https://github.com/user-attachments/assets/6506b1ab-86eb-4a63-aef6-922e2282f49f" />
+
+<img width="1766" height="863" alt="image" src="https://github.com/user-attachments/assets/127cf79a-4de5-4650-ae27-5b562444b068" />
+
+
 
 ## RESULT:
-Thus the program has been executed by using unified memory. It is observed that removing memset function has given less/more_______________time.
+Thus the program has been executed by using unified memory. It is observed that removing memset function has given less time.
